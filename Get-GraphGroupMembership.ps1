@@ -5,6 +5,7 @@
     ./Get-GraphGroupMembership.ps1 -UsersListPath "Path to the list of users" -ExportFileName "Filename of the export CSV file, with .csv extension" -ExportCSVPath "Path to where the CSV will be exported"
 .NOTES
     Author: Padure Sergio
+    Company: Raindrops.dev
     Last Edit: 2022-08-23
     Version 0.1 Initial functional code
     Original Script: Get-AzureADGroupMembership

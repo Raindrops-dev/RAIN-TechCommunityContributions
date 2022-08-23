@@ -1,4 +1,24 @@
-#Script written by Padure Sergio (Raindrops.dev) for The Microsoft Tech Community
+<#
+.SYNOPSIS
+    Script written to get the Azure AD Group membership for a list of users
+.EXAMPLE
+    ./Get-AzureAdGroupMembership.ps1 -UsersListPath "Path to the list of users" -ExportFileName "Filename of the export CSV file, with .csv extension" -ExportCSVPath "Path to where the CSV will be exported"
+.NOTES
+    Author: Padure Sergio
+    Last Edit: 2022-08-23
+    Version 0.1 Initial functional code
+    Versopm 0.2 Optimization and adaptation to standards
+#>
+
+[CmdletBinding()]
+param (
+    [Parameter()]
+    [string]$UsersListPath = "C:\Temp\azureadusers.txt",
+    [Parameter()]
+    [string]$ExportFileName = "ResultantAzureAdGroups.csv",
+    [Parameter()]
+    [string]$ExportCSVPath = "C:\temp"
+)
 
 #Clearing the Screen
 Clear-Host
@@ -12,8 +32,8 @@ catch [Microsoft.Open.Azure.AD.CommonLibrary.AadNeedAuthenticationException] {
     Connect-AzureAD
 }
 
-#Get the list of whose whose group needs to be checked from the text file
-$groupusers = Get-Content -Path "C:\Temp\azureadusers.txt"
+#Get the list of those users whose group needs to be checked from the text file
+$groupusers = Get-Content -Path $UsersListPath
 
 #Preparing object for storing the results
 $finaloutput = @()
@@ -34,6 +54,7 @@ foreach ($groupuser in $groupusers) {
             GroupSecurityEnabled = $group.SecurityEnabled
             GroupObjectId        = $group.ObjectId
         }
+        #Adding temporary object to the final output object
         $finaloutput += New-Object -TypeName psobject -Property $tempobject
     }
 }
@@ -42,4 +63,4 @@ foreach ($groupuser in $groupusers) {
 $finaloutput | Select-Object UserPrincipalName, GroupDisplayname, GroupSecurityEnabled, GroupMailEnabled, GroupObjectType, GroupObjectId | Sort-Object -Property UserPrincipalName, GroupObjectType, GroupDisplayname | Format-Table
 
 #Outputting the result of the search to a CSV
-$finaloutput | Select-Object UserPrincipalName, GroupDisplayname, GroupSecurityEnabled, GroupMailEnabled, GroupObjectType, GroupObjectId | Sort-Object -Property UserPrincipalName, GroupObjectType, GroupDisplayname | Export-Csv -Path "C:\temp\ResultantAzureAdGroups.csv" -NoTypeInformation -Encoding Unicode
+$finaloutput | Select-Object UserPrincipalName, GroupDisplayname, GroupSecurityEnabled, GroupMailEnabled, GroupObjectType, GroupObjectId | Sort-Object -Property UserPrincipalName, GroupObjectType, GroupDisplayname | Export-Csv -Path "$ExportCSVPath\$ExportFileName" -NoTypeInformation -Encoding Unicode

@@ -79,7 +79,7 @@ foreach ($usertoprocess in $Userstoprocess) {
         $false {$IsLicensed = $false}
     }    
     $EXO = Get-EXOMailbox -Identity $UserPrincipalName
-    #$EX = Get-Mailbox -Identity $UserDisplayName
+    $EX = Get-Mailbox -Identity $UserDisplayName
     $userdata = [PSCustomObject]@{
         'UserPrincipalName'           = $UserPrincipalName
         'IsLicensed'                  = $IsLicensed

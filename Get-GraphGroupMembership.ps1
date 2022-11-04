@@ -27,7 +27,7 @@ Clear-Host
 
 $ErrorActionPreference = "Stop"
 
-#Connect to Azure AD
+#Connect to Graph API
 try {
     $null = Get-MgOrganization -ErrorAction Stop
 } 
